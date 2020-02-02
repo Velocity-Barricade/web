@@ -3,6 +3,7 @@ import { databaseConfig } from '../../shared/index';
 import { User } from '../users/user.entity';
 import { FirebaseUser } from '../firebase-user/firebase-user.entity';
 import { Course } from '../course/course.entity';
+import { CourseClass } from '../course-class/course-class.entity';
 
 export const databaseProvider = {
     provide: 'SequelizeInstance',
@@ -20,7 +21,7 @@ export const databaseProvider = {
         }
 
         const sequelize = new Sequelize(config);
-        sequelize.addModels([User, FirebaseUser, Course]);
+        sequelize.addModels([User, FirebaseUser, Course, CourseClass]);
         await sequelize.sync();
         /* await sequelize.sync(); add this if you want to sync model and DB.*/
         return sequelize;

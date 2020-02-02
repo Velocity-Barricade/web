@@ -3,6 +3,8 @@ import { MessageCodeError } from '../../shared/errors/message-code-error';
 import { Course } from './course.entity';
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
+import * as XLSX from 'xlsx';
+import { CourseClass } from '../course-class/course-class.entity';
 
 @Injectable()
 export class CourseService {
@@ -66,7 +68,6 @@ export class CourseService {
     }
 
     public async updateTimetable() {
-        console.log("here");
         const timetableLink = process.env.TIMETABLE_SITES_LINK;
         const timetableHtmlId = process.env.TIMETABLE_SITES_DOWNLOAD_BUTTON_ID;
 
@@ -77,17 +78,71 @@ export class CourseService {
 
         const writer = fs.createWriteStream('./sheet.xlsx');
 
-        const response2 = await this.http.axiosRef({
+        const fileResponse = await this.http.axiosRef({
             url: downloadLink,
             method: 'GET',
             responseType: 'stream',
         });
 
-        response2.data.pipe(writer);
+        fileResponse.data.pipe(writer);
 
-        return new Promise((resolve, reject) => {
+        await new Promise((resolve, reject) => {
             writer.on('finish', resolve);
             writer.on('error', reject);
+        });
+
+        var workbook = XLSX.readFile('./sheet.xlsx');
+        let worksheetsCount = workbook.SheetNames.length;
+
+        const ec = (r, c) => {
+            return XLSX.utils.encode_cell({r:r,c:c})
+        }
+
+        let course_dict = {}
+
+        let worksheetIdx, dayIdx;
+        // Only run for last 5 worksheets (Monday - Friday)
+        for (dayIdx = 0; dayIdx < 5; dayIdx++) {
+            worksheetIdx = worksheetsCount - 5 + dayIdx;
+            let worksheet = workbook.Sheets[workbook.SheetNames[worksheetIdx]];
+
+            let worksheetRange = XLSX.utils.decode_range(worksheet["!ref"])
+            for(var rowIdx = 4; rowIdx < worksheetRange.e.r; ++rowIdx){
+                for(var colIdx = 1; colIdx <= worksheetRange.e.c; ++colIdx){
+                    if (!worksheet[ec(rowIdx, colIdx)]) continue;
+                    // replaces multi spaces with single space
+                    let cellValue: string = worksheet[ec(rowIdx, colIdx)].v.toString().replace(/ +(?= )/g,'');
+
+                    // worksheet[ec(rowIdx, colIdx)].v = cellValue;
+
+                    if (!(cellValue in course_dict)) {
+                        course_dict[cellValue] = [];
+                    }
+
+                    // temp hack
+                    if (cellValue.length < 5) continue;
+
+                    let venue = worksheet[ec(rowIdx, 0)].v.toString();
+                    let time = worksheet[ec(2, colIdx)].v.toString();
+                    let day = dayIdx;
+
+                    course_dict[cellValue].push({ venue, time, day })
+                }
+            }
+        }
+
+        Object.keys(course_dict).forEach(key => {
+            Course.create({ name: key }).then(course => {
+                course_dict[key].forEach(value => {
+                    CourseClass.create({
+                        course_id: course.id,
+                        venue: value.venue,
+                        time: value.time,
+                        day: value.day,
+                        isHardCoded: 0
+                    })
+                })
+            });
         });
     }
 }
