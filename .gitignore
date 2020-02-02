@@ -1,0 +1,36 @@
+#env
+.env
+
+#js file and map
+src/**/*.js
+src/**/*.js.map
+tests/**/*.js
+tests/**/*.js.map
+migrations/**/*.js
+migrations/**/*.js.map
+migrate.js
+migrate.js.map
+
+# dependencies
+/node_modules
+
+# IDE
+/.idea
+/.awcache
+/.vscode
+
+# misc
+npm-debug.log
+
+# build
+/build
+
+# tests
+/coverage
+/.nyc_output
+
+#Package
+package-lock.json
+
+#Firebase
+*firebase-adminsdk*.json

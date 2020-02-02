@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es6",
+    "sourceMap": true,
+    "allowJs": true,
+    "outDir": "./dist",
+    "baseUrl": "./src"
+  },
+  "include": [
+    "migrate.ts",
+    "src/server.ts",
+    "src/shared/config/**/*.ts",
+    "src/shared/filters/**/*.ts",
+    "src/shared/errors/**/*.ts",
+    "src/shared/middlewares/**/*.ts",
+    "migrations/**/*.ts",
+    "src/modules/common/models/**/*.ts",
+    "src/modules/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "assets"
+  ]
+}
