@@ -5,7 +5,7 @@ import { ValidationError } from 'sequelize';
 @Catch(MessageCodeError, ValidationError, HttpException, Error)
 export class DispatchError implements ExceptionFilter {
     public catch(err: any, host: ArgumentsHost) {
-        console.log(err);
+        // console.log(err);
 
         const res = host.switchToHttp().getResponse();
 

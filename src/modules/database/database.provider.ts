@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { databaseConfig } from '../../shared/index';
 import { User } from '../users/user.entity';
 import { FirebaseUser } from '../firebase-user/firebase-user.entity';
+import { Course } from '../course/course.entity';
 
 export const databaseProvider = {
     provide: 'SequelizeInstance',
@@ -19,7 +20,7 @@ export const databaseProvider = {
         }
 
         const sequelize = new Sequelize(config);
-        sequelize.addModels([User, FirebaseUser]);
+        sequelize.addModels([User, FirebaseUser, Course]);
         await sequelize.sync();
         /* await sequelize.sync(); add this if you want to sync model and DB.*/
         return sequelize;
