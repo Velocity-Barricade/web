@@ -21,7 +21,13 @@ export class UserController {
   public async getClasses(@Param('email') email, @Res() res) {
     if (!email) throw new MessageCodeError('user:getClasses:missingEmail');
 
-    let resp = await this.UserService.getClasses(email);
-    return res.status(HttpStatus.OK).json(resp);
+    let response = await this.UserService.getClasses(email);
+    return res.status(HttpStatus.OK).json(response);
+  }
+
+  @Get('getCompleteTimetable')
+  public async getCompleteTimetable(@Res() res) {
+    let response = await this.UserService.getCompleteTimetable();
+    return res.status(HttpStatus.OK).json(response);
   }
 }

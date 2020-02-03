@@ -8,6 +8,7 @@ export class UserService {
 
   constructor(
     @Inject('UserCourseRepository') private readonly UserCourseRepository: typeof UserCourse,
+    @Inject('CourseRepository') private readonly CourseRepository: typeof Course,
     @Inject('SequelizeInstance') private readonly sequelizeInstance
 ) {}
 
@@ -24,6 +25,41 @@ export class UserService {
     });
   }
 
+  private compareTime(first, second) {
+    let startTimeFirst = parseInt(first["time"].split('-')[0]);
+    let startTimeSecond = parseInt(second["time"].split('-')[0]);
+
+    // weird hacks to get around 12-hours time in timetable header
+    if (startTimeFirst >= 8 && startTimeSecond >= 8 || startTimeFirst <= 3 && startTimeSecond <= 3) {
+      return (startTimeFirst < startTimeSecond) ? -1 : 1;
+    }
+    return (startTimeFirst < startTimeSecond) ? 1 : -1;
+  }
+
+  private transformClasses(courses) {
+    let dayClasses = {};
+    [0, 1, 2, 3, 4, 5, 6].forEach(day => dayClasses[day] = []);
+    let removableProperties = ["id", "course_id", "isHardCoded", "day"];
+
+    courses.forEach(course => {
+      let nestedCourses = (course.course) ? course.course : course;
+
+      nestedCourses.courseClasses.forEach(courseClass => {
+        courseClass = Object(courseClass.toJSON());
+        let day = courseClass["day"]
+        removableProperties.forEach(prop => delete courseClass[prop]);
+        courseClass["name"] = nestedCourses.name;
+        dayClasses[day].push(courseClass);
+      })
+    })
+
+    Object.keys(dayClasses).forEach(key => {
+      dayClasses[key] = dayClasses[key].sort(this.compareTime);
+    })
+
+    return dayClasses;
+  }
+
   async getClasses(email): Promise<any> {
 
     let courses = await this.UserCourseRepository.findAll({
@@ -38,35 +74,14 @@ export class UserService {
       ]
     });
 
-    let dayClasses = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []};
-    [0, 1, 2, 3, 4, 5, 6].forEach(day => dayClasses[day] = []);
-    let removableProperties = ["id", "course_id", "isHardCoded", "day"];
+    return this.transformClasses(courses);
+  }
 
-    function compareTime(first, second) {
-      let startTimeFirst = parseInt(first["time"].split('-')[0]);
-      let startTimeSecond = parseInt(second["time"].split('-')[0]);
+  async getCompleteTimetable() {
+    let courses = await this.CourseRepository.findAll({
+      include: [CourseClass]
+    });
 
-      // weird hacks to get around 12-hours time in timetable header
-      if (startTimeFirst >= 8 && startTimeSecond >= 8 || startTimeFirst <= 3 && startTimeSecond <= 3) {
-        return (startTimeFirst < startTimeSecond) ? -1 : 1;
-      }
-      return (startTimeFirst < startTimeSecond) ? 1 : -1;
-    }
-
-    courses.forEach(course => {
-        course.course.courseClasses.forEach(courseClass => {
-          courseClass = Object(courseClass.toJSON());
-          let day = courseClass["day"]
-          removableProperties.forEach(prop => delete courseClass[prop]);
-          courseClass["name"] = course.course.name;
-          dayClasses[day].push(courseClass);
-        })
-    })
-
-    Object.keys(dayClasses).forEach(key => {
-      dayClasses[key] = dayClasses[key].sort(compareTime);
-    })
-
-    return dayClasses;
+    return this.transformClasses(courses)
   }
 }
