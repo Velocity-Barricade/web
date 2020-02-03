@@ -1,6 +1,6 @@
 import { FirebaseUser } from './firebase-user.entity';
 
-export const firebaseUsersProvider = {
+export const FirebaseUserProvider = {
     provide: 'FirebaseUserRepository',
     useValue: FirebaseUser
 };
