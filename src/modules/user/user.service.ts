@@ -15,21 +15,20 @@ export class UserService {
     let userCourses = [];
 
     body.courses.forEach(course => {
-      userCourses.push({ user_uid: body.firebase_uid, course_id: course.id })
+      userCourses.push({ user_email: body.firebase_email, course_id: course.id })
     });
 
     return await this.sequelizeInstance.transaction(async transaction => {
-      await this.UserCourseRepository.destroy({ where: { user_uid: body.firebase_uid }, transaction: transaction });
+      await this.UserCourseRepository.destroy({ where: { user_email: body.firebase_email }, transaction: transaction });
       return await this.UserCourseRepository.bulkCreate(userCourses, { transaction: transaction });
     });
   }
 
-  async getClasses(firebase_uid): Promise<any> {
-    firebase_uid = "testuid";
+  async getClasses(email): Promise<any> {
 
     let courses = await this.UserCourseRepository.findAll({
       where: {
-        user_uid: firebase_uid
+        user_email: email
       },
       include: [
         {

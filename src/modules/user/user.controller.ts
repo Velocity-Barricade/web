@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpStatus, Inject, Get } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpStatus, Inject, Get, Param } from '@nestjs/common';
 import { MessageCodeError } from '../../shared/index';
 import { UserService } from './user.service';
 
@@ -9,7 +9,7 @@ export class UserController {
 
   @Post('updateCourses')
   public async updateCourses(@Body() body, @Res() res) {
-    if (!body || (body && (!("firebase_uid" in body) || !("courses" in body))))
+    if (!body || (body && (!("firebase_email" in body) || !("courses" in body))))
       throw new MessageCodeError('user:updateCourses:missingInformation');
 
     await this.UserService.updateCourses(body);
@@ -17,9 +17,11 @@ export class UserController {
     return res.status(HttpStatus.CREATED).send();
   }
 
-  @Get('getClasses')
-  public async getClasses(@Body() body, @Res() res) {
-    let resp = await this.UserService.getClasses(body.firebase_uid);
+  @Get('getClasses/:email')
+  public async getClasses(@Param('email') email, @Res() res) {
+    if (!email) throw new MessageCodeError('user:getClasses:missingEmail');
+
+    let resp = await this.UserService.getClasses(email);
     return res.status(HttpStatus.OK).json(resp);
   }
 }

@@ -7,7 +7,8 @@ import * as admin from 'firebase-admin';
 @Injectable()
 export class FirebaseAuthMiddleware implements NestMiddleware {
     public async use(req, res, next) {
-        req.body["firebase_uid"] = "testuid";
+        // req.body["firebase_uid"] = "testuid";
+        req.body["firebase_email"] = "saad3112@gmail.com";
         // if (req.headers.authorization) {
             // const token = (req.headers.authorization as string);
             // const decoded: any = jwt.verify(token, process.env.JWT_KEY || '');

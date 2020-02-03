@@ -25,9 +25,9 @@ export class UserCourse extends Model<UserCourse> {
   public id: number;
 
   @Column({
-    type: DataType.CHAR(128)
+    type: DataType.CHAR(64)
   })
-  public user_uid: string;
+  public user_email: string;
 
   @ForeignKey(() => Course)
   @Column({
