@@ -8,15 +8,15 @@ import {
     UpdatedAt,
     DeletedAt,
     BeforeValidate,
-    BeforeCreate
+    BeforeCreate,
+    TableOptions
 } from 'sequelize-typescript';
-import { IDefineOptions } from 'sequelize-typescript/lib/interfaces/IDefineOptions';
 import { MessageCodeError } from '../../shared/errors/message-code-error';
 
-const tableOptions: IDefineOptions = {
-    timestamp: true,
+const tableOptions: TableOptions = {
+    timestamps: true,
     tableName: 'users'
-} as IDefineOptions;
+} as TableOptions;
 
 @Table(tableOptions)
 export class User extends Model<User> {

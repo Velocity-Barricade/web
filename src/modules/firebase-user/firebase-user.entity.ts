@@ -1,11 +1,10 @@
-import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, DeletedAt, BeforeValidate } from 'sequelize-typescript';
-import { IDefineOptions } from 'sequelize-typescript/lib/interfaces/IDefineOptions';
+import { Table, Column, Model, DataType, CreatedAt, UpdatedAt, DeletedAt, BeforeValidate, TableOptions } from 'sequelize-typescript';
 import { MessageCodeError } from '../../shared/errors/message-code-error';
 
-const tableOptions: IDefineOptions = {
-    timestamp: true,
+const tableOptions: TableOptions = {
+    timestamps: true,
     tableName: 'firebaseUsers'
-} as IDefineOptions;
+} as TableOptions;
 
 @Table(tableOptions)
 export class FirebaseUser extends Model<FirebaseUser> {

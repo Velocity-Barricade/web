@@ -4,15 +4,16 @@ import {
   Model,
   DataType,
   ForeignKey,
-  Default
+  Default,
+  TableOptions,
+  BelongsTo
 } from 'sequelize-typescript';
-import { IDefineOptions } from 'sequelize-typescript/lib/interfaces/IDefineOptions';
 import { Course } from '../course/course.entity';
 
-const tableOptions: IDefineOptions = {
-  timestamp: false,
+const tableOptions: TableOptions = {
+  timestamps: false,
   tableName: 'courseClasses'
-} as IDefineOptions;
+} as TableOptions;
 
 @Table(tableOptions)
 export class CourseClass extends Model<CourseClass> {
@@ -29,6 +30,9 @@ export class CourseClass extends Model<CourseClass> {
     allowNull: false
   })
   public course_id: number;
+
+  @BelongsTo(() => Course)
+  course: Course
 
   @Column({
       type: DataType.CHAR(30),

@@ -1,6 +1,6 @@
 import { UserCourse } from './user-course.entity';
 
 export const UserCourseProvider = {
-    provide: 'CourseRepository',
+    provide: 'UserCourseRepository',
     useValue: UserCourse
 };

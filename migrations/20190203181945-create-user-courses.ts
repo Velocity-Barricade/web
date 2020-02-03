@@ -3,7 +3,7 @@ export async function up(sequelize) {
       CREATE TABLE userCourses (
           id INT unsigned NOT NULL AUTO_INCREMENT,
           user_uid VARCHAR(128) NOT NULL,
-          course_id INT unsigned NOT NULL
+          course_id INT unsigned NOT NULL,
           PRIMARY KEY (id)
       );
   `);

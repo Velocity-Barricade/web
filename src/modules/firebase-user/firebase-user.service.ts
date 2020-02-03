@@ -18,13 +18,12 @@ export class FirebaseUserService {
     }
 
     public async findById(id: number): Promise<FirebaseUser | null> {
-        return await this.firebaseUserRepository.findById<FirebaseUser>(id);
+        return await this.firebaseUserRepository.findByPk<FirebaseUser>(id);
     }
 
     public async create(user: FirebaseUser): Promise<FirebaseUser> {
         return await this.sequelizeInstance.transaction(async transaction => {
             return await this.firebaseUserRepository.create<FirebaseUser>(user, {
-                returning: true,
                 transaction
             });
         });
@@ -32,14 +31,13 @@ export class FirebaseUserService {
 
     public async update(id: number, newValue: FirebaseUser): Promise<FirebaseUser | null> {
         return await this.sequelizeInstance.transaction(async transaction => {
-            let user = await this.firebaseUserRepository.findById<FirebaseUser>(id, {
+            let user = await this.firebaseUserRepository.findByPk<FirebaseUser>(id, {
                 transaction
             });
             if (!user) throw new MessageCodeError('user:notFound');
 
             user = this._assign(user, newValue);
             return await user.save({
-                returning: true,
                 transaction
             });
         });

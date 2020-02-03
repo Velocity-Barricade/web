@@ -19,13 +19,12 @@ export class UserService implements IUserService {
     }
 
     public async findById(id: number): Promise<User | null> {
-        return await this.userRepository.findById<User>(id);
+        return await this.userRepository.findByPk<User>(id);
     }
 
     public async create(user: IUser): Promise<User> {
         return await this.sequelizeInstance.transaction(async transaction => {
             return await this.userRepository.create<User>(user, {
-                returning: true,
                 transaction
             });
         });
@@ -33,14 +32,13 @@ export class UserService implements IUserService {
 
     public async update(id: number, newValue: IUser): Promise<User | null> {
         return await this.sequelizeInstance.transaction(async transaction => {
-            let user = await this.userRepository.findById<User>(id, {
+            let user = await this.userRepository.findByPk<User>(id, {
                 transaction
             });
             if (!user) throw new MessageCodeError('user:notFound');
 
             user = this._assign(user, newValue);
             return await user.save({
-                returning: true,
                 transaction
             });
         });

@@ -3,15 +3,16 @@ import {
   Column,
   Model,
   DataType,
-  ForeignKey
+  ForeignKey,
+  TableOptions,
+  BelongsTo
 } from 'sequelize-typescript';
-import { IDefineOptions } from 'sequelize-typescript/lib/interfaces/IDefineOptions';
 import { Course } from '../course/course.entity';
 
-const tableOptions: IDefineOptions = {
-  timestamp: false,
+const tableOptions: TableOptions = {
+  timestamps: false,
   tableName: 'userCourses'
-} as IDefineOptions;
+} as TableOptions;
 
 @Table(tableOptions)
 export class UserCourse extends Model<UserCourse> {
@@ -33,4 +34,7 @@ export class UserCourse extends Model<UserCourse> {
     allowNull: false
   })
   public course_id: number;
+
+  @BelongsTo(() => Course)
+  course: Course
 }

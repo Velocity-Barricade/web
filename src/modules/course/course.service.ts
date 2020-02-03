@@ -23,13 +23,12 @@ export class CourseService {
     }
 
     public async findById(id: number): Promise<Course | null> {
-        return await this.courseRepository.findById<Course>(id);
+        return await this.courseRepository.findByPk<Course>(id);
     }
 
     public async create(course): Promise<Course> {
         return await this.sequelizeInstance.transaction(async transaction => {
             return await this.courseRepository.create<Course>(course, {
-                returning: true,
                 transaction
             });
         });
@@ -37,14 +36,13 @@ export class CourseService {
 
     public async update(id: number, newValue): Promise<Course | null> {
         return await this.sequelizeInstance.transaction(async transaction => {
-            let course = await this.courseRepository.findById<Course>(id, {
+            let course = await this.courseRepository.findByPk<Course>(id, {
                 transaction
             });
             if (!course) throw new MessageCodeError('course:notFound');
 
             course = this._assign(course, newValue);
             return await course.save({
-                returning: true,
                 transaction
             });
         });

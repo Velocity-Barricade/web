@@ -2,14 +2,16 @@ import {
     Table,
     Column,
     Model,
-    DataType
+    DataType,
+    TableOptions,
+    HasMany
 } from 'sequelize-typescript';
-import { IDefineOptions } from 'sequelize-typescript/lib/interfaces/IDefineOptions';
+import { CourseClass } from '../course-class/course-class.entity';
 
-const tableOptions: IDefineOptions = {
-    timestamp: false,
+const tableOptions: TableOptions = {
+    timestamps: false,
     tableName: 'courses'
-} as IDefineOptions;
+} as TableOptions;
 
 @Table(tableOptions)
 export class Course extends Model<Course> {
@@ -26,4 +28,7 @@ export class Course extends Model<Course> {
         allowNull: false
     })
     public name: string;
+
+    @HasMany(() => CourseClass)
+    courseClasses: CourseClass[];
 }

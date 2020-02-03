@@ -42,6 +42,11 @@ export const errorMessagesConfig: { [messageCode: string]: IErrorMessages } = {
         httpStatus: HttpStatus.BAD_REQUEST,
         errorMessage: 'Unable to create a new user with this email.',
     },
+    'user:updateCourses:missingInformation': {
+        type: 'BadRequest',
+        httpStatus: HttpStatus.BAD_REQUEST,
+        errorMessage: 'Unable to update courses, missing information.',
+    },
     'user:show:missingId': {
         type: 'BadRequest',
         httpStatus: HttpStatus.BAD_REQUEST,
