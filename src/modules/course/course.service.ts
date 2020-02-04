@@ -72,7 +72,7 @@ export class CourseService {
         const response = await this.http.get(timetableLink).first().toPromise();
 
         const $ = cheerio.load(response.data);
-        let downloadLink = "https://sites.google.com" + $('div[id^=attachment-download-wuid] > a').attr('href');
+        let downloadLink = "https://sites.google.com" + $('div[id^=' + timetableHtmlId + '] > a').attr('href');
 
         const writer = fs.createWriteStream('./sheet.xlsx');
 

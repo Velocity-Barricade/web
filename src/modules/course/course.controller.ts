@@ -11,4 +11,10 @@ export class CourseController {
         const courses = await this.courseService.findAll();
         return res.status(HttpStatus.OK).json(courses);
     }
+
+    @Get('update')
+    public async updateTimetable(@Res() res) {
+        await this.courseService.updateTimetable();
+        return res.status(HttpStatus.OK).send();
+    }
 }
