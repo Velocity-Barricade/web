@@ -28,6 +28,9 @@
     "format": "prettier --write --parser typescript \"**/*.ts\"",
     "migrate": "ts-node migrate.ts",
     "start": "ts-node src/server.ts --env=NODE_ENV",
+    "start:prod": "node dist/src/server.js",
+    "prestart:prod": "nest build",
+    "postinstall": "npm run prestart:prod",
     "test": "jest",
     "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json"
@@ -70,7 +73,7 @@
     "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
     "tslint-config-standard": "^6.0.1",
-    "typescript": "^2.5.3"
+    "typescript": "^3.7.5"
   },
   "jest": {
     "moduleFileExtensions": [

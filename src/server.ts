@@ -17,15 +17,18 @@ async function bootstrap(): Promise<any> {
     const app = await NestFactory.create(ApplicationModule);
     app.useGlobalFilters(new DispatchError());
 
-    const options = new DocumentBuilder()
-        .setTitle('Timetable Notifier')
-        .setDescription('Timetable Notifier')
-        .setVersion('1.0')
-        .build();
-    const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('api', app, document);
+    let nodeEnvironment = process.env.NODE_ENV;
+    if (nodeEnvironment === "development") {
+        const options = new DocumentBuilder()
+            .setTitle('Timetable Notifier')
+            .setDescription('Timetable Notifier')
+            .setVersion('1.0')
+            .build();
+        const document = SwaggerModule.createDocument(app, options);
+        SwaggerModule.setup('api', app, document);
+    }
 
-    await app.listen(3000);
+    await app.listen(process.env.PORT || 3000);
 }
 
 bootstrap();

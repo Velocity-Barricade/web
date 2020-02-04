@@ -34,3 +34,5 @@ package-lock.json
 
 #Firebase
 *firebase-adminsdk*.json
+
+dist/
