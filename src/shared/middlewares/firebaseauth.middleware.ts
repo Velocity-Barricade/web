@@ -7,22 +7,19 @@ import * as admin from 'firebase-admin';
 @Injectable()
 export class FirebaseAuthMiddleware implements NestMiddleware {
     public async use(req, res, next) {
-        // req.body["firebase_uid"] = "testuid";
-        req.body["firebase_email"] = "saad3112@gmail.com";
-        // if (req.headers.authorization) {
-            // const token = (req.headers.authorization as string);
-            // const decoded: any = jwt.verify(token, process.env.JWT_KEY || '');
-            // Verify firebase user here usng firebase-admin
-            // const user = await FirebaseUser.findOne<FirebaseUser>({
-            //     where: {
-            //         id: decoded.id,
-            //         email: decoded.email
-            //     }
-            // });
-            // if (!user) throw new MessageCodeError('request:unauthorized');
-            next();
-        // } else {
-        //     throw new MessageCodeError('request:unauthorized');
-        // }
+        if (req.headers.authorization) {
+            const idToken = (req.headers.authorization as string);
+
+            // Verify firebase user here using firebase-admin
+            admin.auth().verifyIdToken(idToken).then(decodedToken => {
+                req.body["firebase_uid"] = decodedToken.uid;
+                req.body["firebase_email"] = decodedToken.email;
+                next();
+            }).catch(error => {
+                throw new MessageCodeError('firebase:cantdecode');
+            });
+        } else {
+            throw new MessageCodeError('request:unauthorized');
+        }
     }
 }

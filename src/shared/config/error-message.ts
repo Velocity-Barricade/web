@@ -102,6 +102,11 @@ export const errorMessagesConfig: { [messageCode: string]: IErrorMessages } = {
         httpStatus: HttpStatus.UNAUTHORIZED,
         errorMessage: 'Access unauthorized.',
     },
+    'firebase:cantdecode': {
+        type: 'unauthorized',
+        httpStatus: HttpStatus.UNAUTHORIZED,
+        errorMessage: 'Firebase token can not be decoded/authorized',
+    },
     'auth:login:missingEmail': {
         type: 'BadRequest',
         httpStatus: HttpStatus.BAD_REQUEST,
