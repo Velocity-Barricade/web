@@ -96,6 +96,17 @@ export class CourseService {
             return XLSX.utils.encode_cell({r:r,c:c})
         }
 
+        const map12To24Hours = {
+            "08-8:55": "08:00-08:55",
+            "09-09:55": "09:00-09:55",
+            "10-10:55": "10:00-10:55",
+            "11-11:55": "11:00-11:55",
+            "12-12:55": "12:00-12:55",
+            "1-1:55": "13:00-13:55",
+            "2-2:55": "14:00-14:55",
+            "3-3:55": "15:00-15:55"
+        };
+
         let course_dict = {}
 
         let worksheetIdx, dayIdx;
@@ -121,7 +132,7 @@ export class CourseService {
                     if (cellValue.length < 5) continue;
 
                     let venue = worksheet[ec(rowIdx, 0)].v.toString();
-                    let time = worksheet[ec(2, colIdx)].v.toString();
+                    let time = map12To24Hours[worksheet[ec(2, colIdx)].v.toString()];
                     let day = dayIdx;
 
                     course_dict[cellValue].push({ venue, time, day })
