@@ -140,17 +140,19 @@ export class CourseService {
             }
         }
 
-        Object.keys(course_dict).forEach(key => {
-            Course.create({ name: key }).then(course => {
-                course_dict[key].forEach(value => {
-                    CourseClass.create({
-                        course_id: course.id,
-                        venue: value.venue,
-                        time: value.time,
-                        day: value.day,
-                        isHardCoded: 0
+        CourseClass.destroy({ where: { isHardCoded: false } }).then(() => {
+            Object.keys(course_dict).forEach(courseName => {
+                Course.findOrCreate({ where: { name: courseName } }).then(([course, created]) => {
+                    course_dict[courseName].forEach(value => {
+                        CourseClass.create({
+                            course_id: course.id,
+                            venue: value.venue,
+                            time: value.time,
+                            day: value.day,
+                            isHardCoded: 0
+                        })
                     })
-                })
+                });
             });
         });
     }
