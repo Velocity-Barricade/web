@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { UserCourse } from '../user-course/user-course.entity';
 import { Course } from '../course/course.entity';
 import { CourseClass } from '../course-class/course-class.entity';
+import { MessageCodeError } from '../../shared';
 
 @Injectable()
 export class UserService {
@@ -73,6 +74,10 @@ export class UserService {
         }
       ]
     });
+
+    if (courses.length == 0) {
+      throw new MessageCodeError('user:coursesNotFound');
+    }
 
     return this.transformClasses(courses);
   }

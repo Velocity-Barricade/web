@@ -97,6 +97,11 @@ export const errorMessagesConfig: { [messageCode: string]: IErrorMessages } = {
         httpStatus: HttpStatus.NOT_FOUND,
         errorMessage: 'Unable to find the course with the provided information.',
     },
+    'user:coursesNotFound': {
+        type: 'notFound',
+        httpStatus: HttpStatus.NOT_FOUND,
+        errorMessage: 'The user is either not registered or has no classes yet.',
+    },
     'request:unauthorized': {
         type: 'unauthorized',
         httpStatus: HttpStatus.UNAUTHORIZED,
