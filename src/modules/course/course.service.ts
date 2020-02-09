@@ -120,16 +120,14 @@ export class CourseService {
                 for(var colIdx = 1; colIdx <= worksheetRange.e.c; ++colIdx){
                     if (!worksheet[ec(rowIdx, colIdx)]) continue;
                     // replaces multi spaces with single space
-                    let cellValue: string = worksheet[ec(rowIdx, colIdx)].v.toString().replace(/ +(?= )/g,'');
+                    let cellValue: string = worksheet[ec(rowIdx, colIdx)].v.toString().replace(/ +(?= )/g,'').trim();
+                    if (cellValue.length == 1) continue; // temp hack due to issue in current tt
 
                     // worksheet[ec(rowIdx, colIdx)].v = cellValue;
 
                     if (!(cellValue in course_dict)) {
                         course_dict[cellValue] = [];
                     }
-
-                    // temp hack
-                    if (cellValue.length < 5) continue;
 
                     let venue = worksheet[ec(rowIdx, 0)].v.toString();
                     let time = map12To24Hours[worksheet[ec(2, colIdx)].v.toString()];
