@@ -17,6 +17,14 @@ export class UserController {
     return res.status(HttpStatus.CREATED).send();
   }
 
+  @Get('getCourses/:email')
+  public async getCourses(@Param('email') email, @Res() res) {
+    if (!email) throw new MessageCodeError('user:getCourses:missingEmail');
+
+    let response = await this.UserService.getCourses(email);
+    return res.status(HttpStatus.OK).json(response);
+  }
+
   @Get('getClasses/:email')
   public async getClasses(@Param('email') email, @Res() res) {
     if (!email) throw new MessageCodeError('user:getClasses:missingEmail');

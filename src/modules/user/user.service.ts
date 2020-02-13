@@ -82,6 +82,21 @@ export class UserService {
     return this.transformClasses(courses);
   }
 
+  async getCourses(email): Promise<any> {
+    let courses = await this.UserCourseRepository.findAll({
+      where: {
+        user_email: email
+      },
+      attributes: ['course_id']
+    });
+
+    if (courses.length == 0) {
+      throw new MessageCodeError('user:coursesNotFound');
+    }
+
+    return courses;
+  }
+
   async getCompleteTimetable() {
     let courses = await this.CourseRepository.findAll({
       include: [CourseClass]

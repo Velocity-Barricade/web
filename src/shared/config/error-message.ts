@@ -52,6 +52,11 @@ export const errorMessagesConfig: { [messageCode: string]: IErrorMessages } = {
         httpStatus: HttpStatus.BAD_REQUEST,
         errorMessage: 'Unable to get classes, email missing',
     },
+    'user:getCourses:missingEmail': {
+        type: 'BadRequest',
+        httpStatus: HttpStatus.BAD_REQUEST,
+        errorMessage: 'Unable to get courses, email missing',
+    },
     'user:show:missingId': {
         type: 'BadRequest',
         httpStatus: HttpStatus.BAD_REQUEST,
